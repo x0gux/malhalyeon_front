@@ -27,15 +27,15 @@ const Container = styled(motion.section)`
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: left;
   text-align: center;
   gap: 16px;
-  height: 40vh;
-  padding : 10% 5%;
+  height: 100vh;
+  padding : 15% 5%;
   background: 
     radial-gradient(circle, #e5e5e57d 2px, transparent 2px),
-    linear-gradient(180deg, #FFFFFF 0%, #ff0000 80%);
+    linear-gradient(180deg, #FFFFFF 0%, #ff0000 30%);
   background-size: 24px 24px, 100% 100%;
 `;
 

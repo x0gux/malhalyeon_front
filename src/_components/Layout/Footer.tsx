@@ -2,15 +2,17 @@
 import styled from "@emotion/styled";
 import Image from "next/image";
 import font from "@/packages/design-system/src/font";
+import { useRouter } from "next/navigation";
 
 const Footer = () =>{
+    const router = useRouter();
     return(
         <FooterLayout>
-            <FooterItem>
+            <FooterItem onClick={() => {router.push("/test")}}>
                 <Image src="/test.svg" alt="test" width={24} height={24} />
                 <FooterText>검사하기</FooterText>
             </FooterItem>
-            <FooterItem>
+            <FooterItem onClick={() => {router.push("/")}}>
                 <Image src="/home.svg" alt="home" width={24} height={24} />
                 <FooterText>홈</FooterText>
             </FooterItem>
@@ -23,6 +25,7 @@ export default Footer;
 
 
 const FooterLayout = styled.div`
+    z-index : 3;
     width : 100%;
     display : flex;
     justify-content : space-around;

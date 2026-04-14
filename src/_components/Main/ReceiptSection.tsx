@@ -63,22 +63,22 @@ const Container = styled(motion.section)`
   width : 100%;
   overflow : hidden;
   height : 100vh;
-  position : fixed;
+  position : absolute;
   top: 0px;
 `;
 
 const ReceiptCard = styled.div`
-  z-index : 1000;
+  z-index : 2;
   background: #ffffff;
   padding : 10%;
   border-radius: 36px;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  height : 70vh;
+  height : 80vh;
   position : absolute;
   width: 100%;
-  bottom : 0px;
+  bottom : -10%;
   box-shadow: 0px -2vh 20px rgba(0, 0, 0, 0.5);
 `;
 
