@@ -21,6 +21,7 @@ const font = {
   P2: fontGenerator(400, 14),
   P3: fontGenerator(400, 12),
   P4: fontGenerator(400, 10),
+  P5: fontGenerator(700, 12),
 
   Btn1: fontGenerator(700, 16),
   Btn2: fontGenerator(700, 14),
