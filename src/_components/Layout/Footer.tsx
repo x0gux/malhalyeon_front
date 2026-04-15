@@ -12,22 +12,16 @@ const Footer = () => {
     return (
         <FooterLayout>
             <FooterItem onClick={() => { router.push("/test") }}>
-                <Image 
+                <FooterIcon 
                     src="/test.svg" 
-                    alt="test" 
-                    width={24} 
-                    height={24} 
-                    style={{ filter: pathname === '/test' ? 'none' : 'grayscale(100%) opacity(0.5)' }} 
+                    active={pathname === '/test'} 
                 />
                 <FooterText active={pathname === '/test'}>검사하기</FooterText>
             </FooterItem>
             <FooterItem onClick={() => { router.push("/") }}>
-                <Image 
+                <FooterIcon 
                     src="/home.svg" 
-                    alt="home" 
-                    width={24} 
-                    height={24} 
-                    style={{ filter: pathname === '/' ? 'none' : 'grayscale(100%) opacity(0.5)' }}
+                    active={pathname === '/'} 
                 />
                 <FooterText active={pathname === '/'}>홈</FooterText>
             </FooterItem>
@@ -37,6 +31,18 @@ const Footer = () => {
 }
 
 export default Footer;
+
+const FooterIcon = styled.div<{ src: string; active: boolean }>`
+    width: 24px;
+    height: 24px;
+    background-color: ${props => props.active ? "#FF4D4D" : "#999999"};
+    -webkit-mask-image: url(${props => props.src});
+    mask-image: url(${props => props.src});
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+`
 
 
 const FooterLayout = styled.div`
