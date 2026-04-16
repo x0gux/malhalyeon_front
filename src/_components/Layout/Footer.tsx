@@ -14,9 +14,9 @@ const Footer = () => {
             <FooterItem onClick={() => { router.push("/test/intro") }}>
                 <FooterIcon 
                     src="/test.svg" 
-                    active={pathname === '/test/intro'} 
+                    active={pathname.includes('/test')} 
                 />
-                <FooterText active={pathname === '/test/intro'}>검사하기</FooterText>
+                <FooterText active={pathname.includes('/test')}>검사하기</FooterText>
             </FooterItem>
             <FooterItem onClick={() => { router.push("/") }}>
                 <FooterIcon 
