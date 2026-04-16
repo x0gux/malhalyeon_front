@@ -2,8 +2,9 @@
 
 import styled from '@emotion/styled';
 import font from '@/packages/design-system/src/font';
-import Footer from '@/_components/Layout/Footer';
+import {Footer} from '@/_components/Layout';
 import { useRouter } from 'next/navigation';
+import {Button} from '@/_components/common';
 
 const TestPage = () => {
   const router = useRouter();
@@ -13,8 +14,7 @@ const TestPage = () => {
   };
 
   const handleStartTest = () => {
-    // Navigate to actual test process or show a message
-    alert('검사를 시작합니다!');
+    router.push('/testing');
   };
 
   return (
@@ -22,17 +22,19 @@ const TestPage = () => {
       <ContentArea>
         <HeaderArea>
           <Title>
-            먼저 사용자님의<br />
-            연애유형을 알아보고싶어요
+            사용자님의 대화상대 이름을<br/>
+            입력해주세요
           </Title>
           <SubTitle>
-            더욱 자세한 정보를 드리기 위해 진행하지만 건너뛸수있어요
+            카카오톡 이름과 같은 이름을 입력해주세요
           </SubTitle>
+
+          <TestInput type="text" placeholder='이름을 입력해주세요' />
+
         </HeaderArea>
 
         <ButtonArea>
-          <PrimaryButton onClick={handleSkip}>건너뛸게요</PrimaryButton>
-           <SecondaryButton onClick={handleStartTest}>검사할게요</SecondaryButton>
+           <Button type='secondary' text='다음으로' onClick={handleStartTest} />
         </ButtonArea>
       </ContentArea>
       <Footer />
@@ -79,40 +81,25 @@ const SubTitle = styled.p`
 
 const ButtonArea = styled.div`
   margin-top: auto;
-  margin-bottom: 30%; /* Adjust based on footer height */
+  margin-bottom: 30%;
   display: flex;
   flex-direction: column;
   gap: 15px;
 `;
 
-const PrimaryButton = styled.button`
-  ${font.Btn1};
-  width: 100%;
-  padding : 3%;
-  background-color: #FF4D4D;
-  color: #ffffff;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: opacity 0.2s;
+const TestInput = styled.input`
+  ${font.H2};
+  border : none;
+  border-bottom : 1px solid #FF4D4D;
+  outline : none;
+  margin-top : 10%;
+  padding : 1%;
+  background-color : #ffffff;
+  color : #FF4D4D;
 
-  &:active {
-    opacity: 0.8;
-  }
-`;
+  ::placeholder {
+    color : #FF4D4D;
+    ${font.H2};
 
-const SecondaryButton = styled.button`
-  ${font.Btn1};
-  width: 100%;
-  padding : 3%;
-  background-color: #ffffff;
-  color: #FF4D4D;
-  border: 1px solid #FF4D4D;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-
-  &:active {
-    background-color: #fff0f0;
-  }
-`;
+  `
+  
