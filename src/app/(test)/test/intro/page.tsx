@@ -14,7 +14,7 @@ const TestPage = () => {
   };
 
   const handleStartTest = () => {
-    router.push('/test/testing');
+    router.push('/check/1');
   };
 
   return (

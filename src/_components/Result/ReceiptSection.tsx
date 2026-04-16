@@ -11,8 +11,15 @@ interface AnalysisItem {
   likability_score: number;
 }
 
+interface CompatibilityIssue {
+  issue: string;
+  severity: "높음" | "중간" | "낮음";
+  detail: string;
+}
+
 interface ReceiptData {
   analysis_items: AnalysisItem[];
+  compatibility_issues?: CompatibilityIssue[];
   final_verdict: {
     comment: string;
     status: string;
@@ -21,11 +28,18 @@ interface ReceiptData {
     service_name: string;
     target_name: string;
   };
+  user_type?: string;
 }
 
 interface ReceiptSectionProps {
   data: ReceiptData;
 }
+
+const SEVERITY_COLOR: Record<string, string> = {
+  "높음": "#FF4D4D",
+  "중간": "#FF9800",
+  "낮음": "#9E9E9E",
+};
 
 const ReceiptSection = ({ data }: ReceiptSectionProps) => {
   const total = data.analysis_items.reduce((sum, item) => sum + item.likability_score, 0);
@@ -37,8 +51,12 @@ const ReceiptSection = ({ data }: ReceiptSectionProps) => {
       transition={{ duration: 0.8, delay: 0.4 }}
     >
       <ReceiptCard>
+
         <Header>
           <ReceiptTitle>영수증</ReceiptTitle>
+          {data.user_type && data.user_type !== "미검사" && (
+            <UserTypeBadge>내 유형: {data.user_type}</UserTypeBadge>
+          )}
           <DashedLine />
         </Header>
 
@@ -63,14 +81,38 @@ const ReceiptSection = ({ data }: ReceiptSectionProps) => {
           </tbody>
         </Table>
 
-        <Footer>
-          <DashedLine />
-          <TotalRow>
-            <span>합계</span>
-            <TotalScore>{total}</TotalScore>
-          </TotalRow>
+        <DashedLine />
+
+        <TotalRow>
+          <span>합계</span>
+          <TotalScore>{total}</TotalScore>
+        </TotalRow>
+
+        {data.compatibility_issues && data.compatibility_issues.length > 0 && (
+          <>
+            <SectionTitle>만나면 안되는 이유</SectionTitle>
+            <IssueList>
+              {data.compatibility_issues.map((issue, index) => (
+                <IssueCard key={index}>
+                  <IssueHeader>
+                    <IssueTitle>{issue.issue}</IssueTitle>
+                    <SeverityBadge severity={issue.severity}>{issue.severity}</SeverityBadge>
+                  </IssueHeader>
+                  <IssueDetail>{issue.detail}</IssueDetail>
+                </IssueCard>
+              ))}
+            </IssueList>
+          </>
+        )}
+
+        <DashedLine />
+
+  
+        <VerdictBox>
+          <VerdictStatus>{data.final_verdict.status}</VerdictStatus>
           <Verdict>{data.final_verdict.comment}</Verdict>
-        </Footer>
+        </VerdictBox>
+
       </ReceiptCard>
     </Container>
   );
@@ -81,11 +123,11 @@ export default ReceiptSection;
 const Container = styled(motion.section)`
   max-width: 500px;
   width: 100%;
-  height: calc(90vh - 8vh);
-  max-height: calc(90vh - 8vh);
+  height: calc(90dvh - 8vh);
+  max-height: calc(90dvh - 8vh);
   overflow-y: auto;
   position: absolute;
-  bottom : 0%;
+  bottom: 0;
 `;
 
 const ReceiptCard = styled.div`
@@ -97,24 +139,28 @@ const ReceiptCard = styled.div`
   min-height: 100%;
   width: 100%;
   border-radius: 36px 36px 0 0;
+  padding-bottom: 15vh;
 `;
 
-const Verdict = styled.p`
-  ${font.P2};
-  color: #FF4D4D;
-  text-align: center;
-  line-height: 1.5;
-`;
 const Header = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 `;
 
 const ReceiptTitle = styled.h2`
   ${font.D3};
   color: #333;
+`;
+
+const UserTypeBadge = styled.span`
+  ${font.P2};
+  background: #fff5f5;
+  color: #FF4D4D;
+  border: 1px solid #FF4D4D;
+  border-radius: 20px;
+  padding: 4px 14px;
 `;
 
 const DashedLine = styled.div`
@@ -142,13 +188,6 @@ const Td = styled.td<{ align: string; isNegative?: boolean }>`
   padding: 12px 0;
 `;
 
-const Footer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  margin-bottom : 10vh;
-`;
-
 const TotalRow = styled.div`
   display: flex;
   justify-content: space-between;
@@ -159,4 +198,67 @@ const TotalRow = styled.div`
 const TotalScore = styled.span`
   ${font.D2};
   color: #FF4D4D;
+`;
+
+const SectionTitle = styled.h3`
+  ${font.H2};
+  color: #333;
+`;
+
+const IssueList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+const IssueCard = styled.div`
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`;
+
+const IssueHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const IssueTitle = styled.span`
+  ${font.H3};
+  color: #333;
+`;
+
+const SeverityBadge = styled.span<{ severity: string }>`
+  ${font.P3};
+  color: ${({ severity }) => SEVERITY_COLOR[severity] ?? "#ccc"};
+  font-weight: 600;
+`;
+
+const IssueDetail = styled.p`
+  ${font.P2};
+  color: #666;
+  line-height: 1.5;
+`;
+
+const VerdictBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+`;
+
+const VerdictStatus = styled.span`
+  ${font.H1};
+  color: #FF4D4D;
+  font-weight: 700;
+`;
+
+const Verdict = styled.p`
+  ${font.P2};
+  color: #FF4D4D;
+  text-align: center;
+  line-height: 1.5;
 `;
