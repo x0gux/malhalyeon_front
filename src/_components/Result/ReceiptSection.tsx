@@ -3,15 +3,32 @@ import styled from "@emotion/styled";
 import font from "@/_packages/design-system/src/font";
 import { motion } from "framer-motion";
 
-const RECEIPT_DATA = [
-  { action: "가스라이팅", count: 3, score: -30 },
-  { action: "잠수", count: 5, score: -40 },
-  { action: "어장", count: 2, score: -50 },
-  { action: "만날듯안만날듯", count: 3, score: -20 },
-];
+interface AnalysisItem {
+  behavior: string;
+  count: number;
+  description: string;
+  evidence: string;
+  likability_score: number;
+}
 
-const ReceiptSection = () => {
-  const totalScore = RECEIPT_DATA.reduce((acc, curr) => acc + curr.score, 0);
+interface ReceiptData {
+  analysis_items: AnalysisItem[];
+  final_verdict: {
+    comment: string;
+    status: string;
+  };
+  receipt_info: {
+    service_name: string;
+    target_name: string;
+  };
+}
+
+interface ReceiptSectionProps {
+  data: ReceiptData;
+}
+
+const ReceiptSection = ({ data }: ReceiptSectionProps) => {
+  const total = data.analysis_items.reduce((sum, item) => sum + item.likability_score, 0);
 
   return (
     <Container
@@ -24,7 +41,7 @@ const ReceiptSection = () => {
           <ReceiptTitle>영수증</ReceiptTitle>
           <DashedLine />
         </Header>
-        
+
         <Table>
           <thead>
             <tr>
@@ -34,11 +51,13 @@ const ReceiptSection = () => {
             </tr>
           </thead>
           <tbody>
-            {RECEIPT_DATA.map((item, index) => (
+            {data.analysis_items.map((item, index) => (
               <tr key={index}>
-                <Td align="left">{item.action}</Td>
+                <Td align="left">{item.behavior}</Td>
                 <Td align="center">{item.count}</Td>
-                <Td align="right" isNegative>{item.score}</Td>
+                <Td align="right" isNegative={item.likability_score < 0}>
+                  {item.likability_score}
+                </Td>
               </tr>
             ))}
           </tbody>
@@ -48,8 +67,9 @@ const ReceiptSection = () => {
           <DashedLine />
           <TotalRow>
             <span>합계</span>
-            <TotalScore>{totalScore}</TotalScore>
+            <TotalScore>{total}</TotalScore>
           </TotalRow>
+          <Verdict>{data.final_verdict.comment}</Verdict>
         </Footer>
       </ReceiptCard>
     </Container>
@@ -59,29 +79,32 @@ const ReceiptSection = () => {
 export default ReceiptSection;
 
 const Container = styled(motion.section)`
-  max-width : 500px;
-  width : 100%;
-  overflow : hidden;
-  height : 100vh;
-  position : absolute;
-  top: 0px;
+  max-width: 500px;
+  width: 100%;
+  height: calc(90vh - 8vh);
+  max-height: calc(90vh - 8vh);
+  overflow-y: auto;
+  position: absolute;
+  bottom : 0%;
 `;
 
 const ReceiptCard = styled.div`
-  z-index : 2;
   background: #ffffff;
-  padding : 10%;
-  border-radius: 36px;
+  padding: 10%;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  height : 80vh;
-  position : absolute;
+  min-height: 100%;
   width: 100%;
-  bottom : -10%;
-  box-shadow: 0px -2vh 20px rgba(0, 0, 0, 0.5);
+  border-radius: 36px 36px 0 0;
 `;
 
+const Verdict = styled.p`
+  ${font.P2};
+  color: #FF4D4D;
+  text-align: center;
+  line-height: 1.5;
+`;
 const Header = styled.div`
   display: flex;
   flex-direction: column;
@@ -123,6 +146,7 @@ const Footer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
+  margin-bottom : 10vh;
 `;
 
 const TotalRow = styled.div`

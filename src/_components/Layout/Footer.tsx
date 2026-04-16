@@ -2,7 +2,7 @@
 
 import styled from "@emotion/styled";
 import Image from "next/image";
-import font from "@/packages/design-system/src/font";
+import font from "@/_packages/design-system/src/font";
 import { useRouter, usePathname } from "next/navigation";
 
 const Footer = () => {
@@ -11,12 +11,12 @@ const Footer = () => {
 
     return (
         <FooterLayout>
-            <FooterItem onClick={() => { router.push("/test") }}>
+            <FooterItem onClick={() => { router.push("/test/intro") }}>
                 <FooterIcon 
                     src="/test.svg" 
-                    active={pathname === '/test'} 
+                    active={pathname === '/test/intro'} 
                 />
-                <FooterText active={pathname === '/test'}>검사하기</FooterText>
+                <FooterText active={pathname === '/test/intro'}>검사하기</FooterText>
             </FooterItem>
             <FooterItem onClick={() => { router.push("/") }}>
                 <FooterIcon 
@@ -54,7 +54,7 @@ const FooterLayout = styled.div`
     position: fixed;
     max-width:500px;
     bottom : 0;
-    height : 80px;
+    height : 8vh;
     background-color: #ffffff;
     border-top: 1px solid #f0f0f0;
 `

@@ -1,7 +1,7 @@
 'use client';
 
 import styled from '@emotion/styled';
-import font from '@/packages/design-system/src/font';
+import font from '@/_packages/design-system/src/font';
 import {Footer} from '@/_components/Layout';
 import { useRouter } from 'next/navigation';
 import {Button} from '@/_components/common';
@@ -10,11 +10,11 @@ const TestPage = () => {
   const router = useRouter();
 
   const handleSkip = () => {
-    router.push('/');
+    router.push('/test/targetname');
   };
 
   const handleStartTest = () => {
-    router.push('/testing');
+    router.push('/test/testing');
   };
 
   return (
@@ -22,19 +22,17 @@ const TestPage = () => {
       <ContentArea>
         <HeaderArea>
           <Title>
-            사용자님의 대화상대 이름을<br/>
-            입력해주세요
+            먼저 사용자님의<br />
+            연애유형을 알아보고싶어요
           </Title>
           <SubTitle>
-            카카오톡 이름과 같은 이름을 입력해주세요
+            더욱 자세한 정보를 드리기 위해 진행하지만 건너뛸수있어요
           </SubTitle>
-
-          <TestInput type="text" placeholder='이름을 입력해주세요' />
-
         </HeaderArea>
 
         <ButtonArea>
-           <Button type='secondary' text='다음으로' onClick={handleStartTest} />
+          <Button type='secondary' text='건너뛸게요' onClick={handleSkip} />
+           <Button type='primary' text='검사할게요' onClick={handleStartTest} />
         </ButtonArea>
       </ContentArea>
       <Footer />
@@ -81,25 +79,8 @@ const SubTitle = styled.p`
 
 const ButtonArea = styled.div`
   margin-top: auto;
-  margin-bottom: 30%;
+  margin-bottom: 30%; /* Adjust based on footer height */
   display: flex;
   flex-direction: column;
   gap: 15px;
 `;
-
-const TestInput = styled.input`
-  ${font.H2};
-  border : none;
-  border-bottom : 1px solid #FF4D4D;
-  outline : none;
-  margin-top : 10%;
-  padding : 1%;
-  background-color : #ffffff;
-  color : #FF4D4D;
-
-  ::placeholder {
-    color : #FF4D4D;
-    ${font.H2};
-
-  `
-  

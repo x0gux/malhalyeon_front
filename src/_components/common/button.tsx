@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import font from "@/packages/design-system/src/font";
+import font from "@/_packages/design-system/src/font";
 
 const Button = ({text, onClick,type}: {type : 'primary' | 'secondary',text: string, onClick: () => void}) => {
     if(type == 'primary'){
