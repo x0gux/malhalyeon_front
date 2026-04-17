@@ -38,7 +38,7 @@ const CheckPage = ({ params }: { params: Promise<{ id: string }> }) => {
       setLoading(true);
       setSelected(null);
       try {
-        const res = await axios.get(`https://malhalyeon-back.vercel.app/api/quiz/${id}`);
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/quiz/${id}`);
         setQuiz(res.data);
       } catch {
         alert('문항을 불러오지 못했어요.');
