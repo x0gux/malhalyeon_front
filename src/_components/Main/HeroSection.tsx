@@ -2,6 +2,7 @@
 import styled from "@emotion/styled";
 import font from "@/_packages/design-system/src/font";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const HeroSection = () => {
   return (
@@ -15,6 +16,9 @@ const HeroSection = () => {
         기대감에 따른 실망, 끝나지않는 짝사랑 망할연에서 모두 해결해요!<br/>
         그사람에 대한 영수증을 만들어서 사용자님께 드려요
       </Subtitle>
+      <RankingLink href="/ranking">
+        명예의 전당 구경하기 →
+      </RankingLink>
     </Container>
   );
 };
@@ -50,4 +54,18 @@ const Subtitle = styled.p`
   color: #FFFFFF;
   line-height: 2.5;
   text-align: left;
+`;
+
+const RankingLink = styled(Link)`
+  ${font.H3};
+  color: #FFFFFF;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-align: left;
+  margin-top: 10px;
+  opacity: 0.9;
+  &:hover {
+    color: #ffdada;
+    opacity: 1;
+  }
 `;

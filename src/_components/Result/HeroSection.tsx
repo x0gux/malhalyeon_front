@@ -18,20 +18,13 @@ const HeroSection = () => {
 export default HeroSection;
 
 const Container = styled(motion.section)`
-  position : relative;
   z-index : 0;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: left;
-  text-align: center;
-  gap: 16px;
-  height: 100vh;
+  height: 50vh;
   padding : 15% 5%;
   background: 
     radial-gradient(circle, #e5e5e57d 2px, transparent 2px),
-    linear-gradient(180deg, #FFFFFF 0%, #ff0000 17%);
+    linear-gradient(180deg, #FFFFFF 0%, #ff0000 30%);
   background-size: 24px 24px, 100% 100%;
 `;
 

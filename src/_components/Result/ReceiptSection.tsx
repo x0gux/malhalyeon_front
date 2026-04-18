@@ -2,6 +2,11 @@
 import styled from "@emotion/styled";
 import font from "@/_packages/design-system/src/font";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { auth } from "@/_lib/firebase";
+import { saveToRanking } from "@/_lib/database";
+import { Button } from "@/_components/common";
+import { useRouter } from "next/navigation";
 
 interface AnalysisItem {
   behavior: string;
@@ -42,7 +47,31 @@ const SEVERITY_COLOR: Record<string, string> = {
 };
 
 const ReceiptSection = ({ data }: ReceiptSectionProps) => {
+  const router = useRouter();
+  const [isSharing, setIsSharing] = useState(false);
   const total = data.analysis_items.reduce((sum, item) => sum + item.likability_score, 0);
+
+  const handleShare = async () => {
+    if (!auth.currentUser) {
+      alert("로그인이 필요한 기능입니다.");
+      router.push("/login");
+      return;
+    }
+
+    if (confirm("이 분석 결과를 명예의 전당(랭킹)에 등록하시겠습니까?\n(상대방 이름은 공개되지만, 사용자님의 신분은 철저히 보호됩니다.)")) {
+      try {
+        setIsSharing(true);
+        await saveToRanking(data, auth.currentUser.displayName || auth.currentUser.email || "익명");
+        alert("명예의 전당에 성공적으로 등록되었습니다!");
+        router.push("/ranking");
+      } catch (err) {
+        alert("등록 중 오류가 발생했습니다.");
+      } finally {
+        setIsSharing(false);
+      }
+    }
+  };
+
 
   return (
     <Container
@@ -113,21 +142,33 @@ const ReceiptSection = ({ data }: ReceiptSectionProps) => {
           <Verdict>{data.final_verdict.comment}</Verdict>
         </VerdictBox>
 
+        <DashedLine />
+
+        <ShareArea>
+          <ShareTitle>이 영수증을 박제할까요?</ShareTitle>
+          <ShareDesc>
+            랭킹에 등록하여 다른 사람들과<br />
+            망한 연애 데이터를 공유해보세요.
+          </ShareDesc>
+          <Button 
+            type="primary" 
+            text={isSharing ? "등록 중..." : "명예의 전당 등록하기"} 
+            onClick={handleShare} 
+          />
+        </ShareArea>
+
       </ReceiptCard>
     </Container>
   );
 };
+
 
 export default ReceiptSection;
 
 const Container = styled(motion.section)`
   max-width: 500px;
   width: 100%;
-  height: calc(90dvh - 8vh);
-  max-height: calc(90dvh - 8vh);
-  overflow-y: auto;
-  position: absolute;
-  bottom: 0;
+  position: relative;
 `;
 
 const ReceiptCard = styled.div`
@@ -138,8 +179,9 @@ const ReceiptCard = styled.div`
   gap: 24px;
   min-height: 100%;
   width: 100%;
-  border-radius: 36px 36px 0 0;
-  padding-bottom: 15vh;
+  border-radius: 40px 40px 0 0;
+  box-shadow: 0px -10px 30px rgba(0, 0, 0, 0.1);
+  padding-bottom: 50px;
 `;
 
 const Header = styled.div`
@@ -261,4 +303,25 @@ const Verdict = styled.p`
   color: #FF4D4D;
   text-align: center;
   line-height: 1.5;
+`;
+
+const ShareArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 0;
+`;
+
+const ShareTitle = styled.h4`
+  ${font.H2};
+  color: #333;
+`;
+
+const ShareDesc = styled.p`
+  ${font.P3};
+  color: #999;
+  text-align: center;
+  line-height: 1.4;
+  margin-bottom: 8px;
 `;
