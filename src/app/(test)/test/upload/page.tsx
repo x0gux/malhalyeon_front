@@ -8,9 +8,11 @@ import { Button } from '@/_components/common';
 import { useState } from 'react';
 import { useTestStore } from '@/_store/testStore';
 import { uploadCsv } from '@/_lib/upload';
+import TestModal from '@/_components/Test/Testmodal';
 
 const TestPage = () => {
   const [loading , setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { setCsvfile , targetName , setResultData } = useTestStore();
   const [file, setFile] = useState<File | null>(null);
   const router = useRouter();
@@ -29,10 +31,10 @@ const handleStartTest = async () => {
     }
 
     try {
-      setLoading(true);        
+      setLoading(true);
       const result = await uploadCsv(file, targetName);
-      setResultData(result);  
-      console.log(result);   
+      setResultData(result);
+      console.log(result);
       router.push('/test/result');
     } catch (err) {
       console.error(err);
@@ -50,12 +52,12 @@ const handleStartTest = async () => {
             사용자님의 대화상대와 나눈<br />
             대화내용을 업로드해주세요
           </Title>
-          <SubTitle>csv파일만 업로드가능해요</SubTitle>
+          <SubTitle>csv와 txt만 업로드가능해요 - <HowtoButton onClick={() => setIsModalOpen(true)}>How to?</HowtoButton></SubTitle>
 
           <FileInput
             id="file-upload"
             type="file"
-            accept=".csv"
+            accept='.csv, .txt'
             onChange={handleFileChange}
           />
           <FileLabel htmlFor="file-upload" isUploaded={!!file}>
@@ -68,6 +70,8 @@ const handleStartTest = async () => {
         </ButtonArea>
       </ContentArea>
       <Footer />
+
+      <TestModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </PageLayout>
   );
 };
@@ -132,3 +136,19 @@ const FileLabel = styled.label<{ isUploaded: boolean }>`
   cursor: pointer;
   transition: all 0.2s;
 `;
+
+const HowtoButton = styled.button`
+  ${font.P2};
+  color: #FF4D4D;
+  text-decoration: underline;
+  background-color : #ffffff;
+  border : none;
+  cursor : pointer;
+
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    ${font.P1};
+  }
+
+`
