@@ -1,11 +1,12 @@
 'use client'
-import { Footer } from "@/_components/Layout";
+import { Footer, Header } from "@/_components/Layout";
 import { HeroSection, ReceiptSection } from "@/_components/Main";
 import styled from "@emotion/styled";
 
 const Home = () => {
   return (
     <MainContainer>
+      <Header />
       <HeroSection />
       <ReceiptSection />
       <Footer />

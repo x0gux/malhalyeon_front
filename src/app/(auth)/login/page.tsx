@@ -25,7 +25,7 @@ const LoginPage = () => {
       setLoading(true);
       setErrorMsg('');
       await signInWithEmailAndPassword(auth, email, password);
-      router.push('/test/upload'); // 로그인 성공 시 돌아갈 페이지
+      router.push('/');
     } catch (err: any) {
       console.error(err);
       setErrorMsg('이메일 또는 비밀번호가 올바르지 않습니다.');
