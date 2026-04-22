@@ -5,7 +5,7 @@ import {motion} from 'framer-motion'
 const Loading = () => {
   return (
     <>
-      <Image src="/logo.svg" alt="Logo" width={150} height={150} />
+      <Image src="/logo.svg" alt="Logo" width={150} height={150} priority />
       <motion.div
         style={{ display: "inline-block" ,width: "25px", height: "25px" }}
         animate={{

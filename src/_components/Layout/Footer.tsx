@@ -25,6 +25,13 @@ const Footer = () => {
                 />
                 <FooterText active={pathname === '/'}>홈</FooterText>
             </FooterItem>
+            <FooterItem onClick={() => { router.push("/ranking") }}>
+                <FooterIcon 
+                    src="/ranking.svg" 
+                    active={pathname === '/ranking'} 
+                />
+                <FooterText active={pathname === '/ranking'}>랭킹</FooterText>
+            </FooterItem>
         </FooterLayout>
     )
 

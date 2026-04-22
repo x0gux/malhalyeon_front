@@ -24,7 +24,7 @@ const Header = () => {
 
   return (
     <HeaderContainer>
-      <Image src={Logo} alt="Logo" width={50} height={50} onClick={() => {router.push("/")}} />
+      <Image src={Logo} alt="Logo" width={50} height={50} priority onClick={() => {router.push("/")}} />
       <Nav>
         {user ? (
           <>

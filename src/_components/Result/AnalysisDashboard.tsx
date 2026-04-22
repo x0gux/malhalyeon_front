@@ -130,7 +130,7 @@ const AnalysisDashboard = ({ items }: DashboardProps) => {
 
       <SummaryBox>
         <SummaryText>
-          💡 <strong>분석 총평</strong><br />
+          <strong>분석 총평</strong><br />
           {items.length > 0 ? (
             `가장 빈번한 '${barData[0].behavior}' 행동과 가장 치명적인 '${items.reduce((max, i) => Math.abs(i.likability_score) > Math.abs(max.likability_score) ? i : max).behavior}' 행동이 복합적으로 나타나고 있습니다.`
           ) : "분석된 행동 데이터가 부족합니다."}

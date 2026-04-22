@@ -38,6 +38,7 @@ interface ReceiptData {
 
 interface ReceiptSectionProps {
   data: ReceiptData;
+  showShare?: boolean;
 }
 
 const SEVERITY_COLOR: Record<string, string> = {
@@ -46,7 +47,7 @@ const SEVERITY_COLOR: Record<string, string> = {
   "낮음": "#9E9E9E",
 };
 
-const ReceiptSection = ({ data }: ReceiptSectionProps) => {
+const ReceiptSection = ({ data, showShare = true }: ReceiptSectionProps) => {
   const router = useRouter();
   const [isSharing, setIsSharing] = useState(false);
   const total = data.analysis_items.reduce((sum, item) => sum + item.likability_score, 0);
@@ -58,7 +59,7 @@ const ReceiptSection = ({ data }: ReceiptSectionProps) => {
       return;
     }
 
-    if (confirm("이 분석 결과를 명예의 전당(랭킹)에 등록하시겠습니까?\n(상대방 이름은 공개되지만, 사용자님의 신분은 철저히 보호됩니다.)")) {
+    if (confirm("이 분석 결과를 명예의 전당(랭킹)에 등록하시겠습니까?\n(상대방 이름과 사용자님의 신분 모두 익명으로 보호되어 등록됩니다.)")) {
       try {
         setIsSharing(true);
         await saveToRanking(data, auth.currentUser.displayName || auth.currentUser.email || "익명");
@@ -142,20 +143,23 @@ const ReceiptSection = ({ data }: ReceiptSectionProps) => {
           <Verdict>{data.final_verdict.comment}</Verdict>
         </VerdictBox>
 
-        <DashedLine />
-
-        <ShareArea>
-          <ShareTitle>이 영수증을 박제할까요?</ShareTitle>
-          <ShareDesc>
-            랭킹에 등록하여 다른 사람들과<br />
-            망한 연애 데이터를 공유해보세요.
-          </ShareDesc>
-          <Button 
-            type="primary" 
-            text={isSharing ? "등록 중..." : "명예의 전당 등록하기"} 
-            onClick={handleShare} 
-          />
-        </ShareArea>
+        {showShare && (
+          <>
+            <DashedLine />
+            <ShareArea>
+              <ShareTitle>이 영수증을 박제할까요?</ShareTitle>
+              <ShareDesc>
+                랭킹에 등록하여 다른 사람들과<br />
+                망한 연애 데이터를 공유해보세요.
+              </ShareDesc>
+              <Button 
+                type="primary" 
+                text={isSharing ? "등록 중..." : "명예의 전당 등록하기"} 
+                onClick={handleShare} 
+              />
+            </ShareArea>
+          </>
+        )}
 
       </ReceiptCard>
     </Container>

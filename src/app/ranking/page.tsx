@@ -28,24 +28,63 @@ const RankingPage = () => {
     fetchRanking();
   }, []);
 
+  const anonymizeText = (text: string, userName: string, targetName: string) => {
+    if (!text) return text;
+    let result = text;
+    if (userName && userName !== "익명") {
+      result = result.split(userName).join("사용자");
+    }
+    if (targetName && targetName !== "익명의 사용자") {
+      result = result.split(targetName).join("상대방");
+    }
+    return result;
+  };
+
+  const getAnonymizedItem = (item: RankingItem): RankingItem => {
+    return {
+      ...item,
+      analysisItems: item.analysisItems.map(ai => ({
+        ...ai,
+        behavior: anonymizeText(ai.behavior, item.userName, item.targetName),
+        description: anonymizeText(ai.description, item.userName, item.targetName),
+        evidence: anonymizeText(ai.evidence, item.userName, item.targetName),
+      })),
+      compatibilityIssues: item.compatibilityIssues.map(ci => ({
+        ...ci,
+        issue: anonymizeText(ci.issue, item.userName, item.targetName),
+        detail: anonymizeText(ci.detail, item.userName, item.targetName),
+      })),
+      finalVerdict: {
+        ...item.finalVerdict,
+        comment: anonymizeText(item.finalVerdict.comment, item.userName, item.targetName),
+      }
+    };
+  };
+
   if (selectedItem) {
-    // 상세 보기 모드 (영수증 재사용)
+    const anonymizedItem = getAnonymizedItem(selectedItem);
     return (
       <PageLayout>
         <DetailHeader>
           <BackButton onClick={() => setSelectedItem(null)}>← 목록으로</BackButton>
-          <DetailTitle>{selectedItem.userName}님의 영수증</DetailTitle>
+          <DetailTitle>익명의 사용자님의 영수증</DetailTitle>
         </DetailHeader>
-        <ReceiptSection data={{
-          analysis_items: selectedItem.analysisItems,
-          compatibility_issues: selectedItem.compatibilityIssues,
-          final_verdict: selectedItem.finalVerdict,
-          receipt_info: {
-            service_name: "망할연",
-            target_name: selectedItem.targetName
-          },
-          user_type: selectedItem.userType
-        }} />
+
+        <DetailContent>
+        <ReceiptSection 
+          data={{
+            analysis_items: anonymizedItem.analysisItems,
+            compatibility_issues: anonymizedItem.compatibilityIssues,
+            final_verdict: anonymizedItem.finalVerdict,
+            receipt_info: {
+              service_name: "망할연",
+              target_name: "익명의 사용자"
+            },
+            user_type: anonymizedItem.userType
+          }} 
+          showShare={false}
+        />
+        </DetailContent>
       </PageLayout>
     );
   }
@@ -66,8 +105,8 @@ const RankingPage = () => {
               <RankingCard key={item.id} onClick={() => setSelectedItem(item)}>
                 <RankNumber isTop3={index < 3}>{index + 1}</RankNumber>
                 <CardInfo>
-                  <TargetName>{item.targetName}와의 대화</TargetName>
-                  <UserName>작성자: {item.userName}</UserName>
+                  <TargetName>익명의사용자와의 대화</TargetName>
+                  <UserName>작성자: 익명</UserName>
                 </CardInfo>
                 <ScoreBadge>{item.totalScore}점</ScoreBadge>
               </RankingCard>
@@ -139,6 +178,13 @@ const RankingCard = styled.div`
   }
 `;
 
+const DetailContent = styled.div`
+  height : 100vh;
+  overflow : scroll;
+  z-index : 0;
+  padding-top : 20vh;
+`
+
 const RankNumber = styled.span<{ isTop3: boolean }>`
   ${font.H1};
   color: ${props => props.isTop3 ? "#FF4D4D" : "#ddd"};
@@ -175,12 +221,17 @@ const LoadingText = styled.p`
 `;
 
 const DetailHeader = styled.div`
+  max-width : 500px;
+  width : 100%;
   padding: 60px 24px 20px;
+  height: 100px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between;
   background: #fff;
-  z-index: 10;
+  position: fixed;
+  top:0;
+  z-index: 1;
 `;
 
 const BackButton = styled.button`
@@ -197,7 +248,8 @@ const DetailTitle = styled.h2`
 `;
 
 const FooterContainer = styled.div`
-  margin-top: auto;
+  margin-top : -20px
+
 `;
 
 const HomeButton = styled.button`
