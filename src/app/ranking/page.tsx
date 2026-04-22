@@ -31,12 +31,35 @@ const RankingPage = () => {
   const anonymizeText = (text: string, userName: string, targetName: string) => {
     if (!text) return text;
     let result = text;
+
     if (userName && userName !== "익명") {
       result = result.split(userName).join("사용자");
+
+      if (userName.includes('@')) {
+        const emailPrefix = userName.split('@')[0];
+        result = result.split(emailPrefix).join("사용자");
+      }
+      
+
+      if (userName.length === 3) {
+        const firstName = userName.substring(1);
+        result = result.split(firstName).join("사용자");
+      }
     }
+
     if (targetName && targetName !== "익명의 사용자") {
+
       result = result.split(targetName).join("상대방");
+      
+
+      if (targetName.length === 3) {
+        const firstName = targetName.substring(1);
+        result = result.split(firstName).join("상대방");
+      }
     }
+
+    result = result.split("본인").join("사용자");
+    
     return result;
   };
 
