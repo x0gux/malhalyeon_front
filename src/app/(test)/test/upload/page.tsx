@@ -57,7 +57,7 @@ const handleStartTest = async () => {
           <FileInput
             id="file-upload"
             type="file"
-            accept='.csv, .txt'
+            accept='.csv, .txt, .html, .htm'
             onChange={handleFileChange}
           />
           <FileLabel htmlFor="file-upload" isUploaded={!!file}>
