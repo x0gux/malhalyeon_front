@@ -21,6 +21,7 @@ export const metadata: Metadata = {
 
 import AuthProvider from "@/_components/AuthProvider";
 import EmotionRegistry from "@/_components/EmotionRegistry";
+import { Analytics } from '@vercel/analytics/next';
 
 export default function RootLayout({
   children,
@@ -34,6 +35,7 @@ export default function RootLayout({
         <EmotionRegistry>
           <AuthProvider>{children}</AuthProvider>
         </EmotionRegistry>
+        <Analytics />
       </body>
     </html>
   );
