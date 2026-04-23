@@ -2,9 +2,9 @@
 import styled from "@emotion/styled";
 import font from "@/_packages/design-system/src/font";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { auth } from "@/_lib/firebase";
-import { saveToRanking } from "@/_lib/database";
+import { saveToRanking, saveToUserHistory } from "@/_lib/database";
 import { Button } from "@/_components/common";
 import { useRouter } from "next/navigation";
 
@@ -51,6 +51,23 @@ const ReceiptSection = ({ data, showShare = true }: ReceiptSectionProps) => {
   const router = useRouter();
   const [isSharing, setIsSharing] = useState(false);
   const total = data.analysis_items.reduce((sum, item) => sum + item.likability_score, 0);
+
+  const hasSavedRef = useRef(false);
+
+  useEffect(() => {
+    const saveHistory = async () => {
+      if (auth.currentUser && !hasSavedRef.current) {
+        try {
+          hasSavedRef.current = true;
+          await saveToUserHistory(auth.currentUser.uid, data);
+          console.log("History saved successfully");
+        } catch (err) {
+          console.error("Error saving history:", err);
+        }
+      }
+    };
+    saveHistory();
+  }, [data]);
 
   const handleShare = async () => {
     if (!auth.currentUser) {

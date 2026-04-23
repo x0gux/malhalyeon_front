@@ -28,61 +28,61 @@ const RankingPage = () => {
     fetchRanking();
   }, []);
 
-  const anonymizeText = (text: string, userName: string, targetName: string) => {
-    if (!text) return text;
-    let result = text;
+  const anonymizeText = (text: string | null | undefined, userName: string, targetName: string): string => {
+  // 문자열이 아니면 빈 문자열로 처리
+  if (!text || typeof text !== 'string') return '';
+  
+  let result = text;
 
-    if (userName && userName !== "익명") {
-      result = result.split(userName).join("사용자");
+  if (!userName) return result;
 
-      if (userName.includes('@')) {
-        const emailPrefix = userName.split('@')[0];
-        result = result.split(emailPrefix).join("사용자");
-      }
-      
+  if (userName && userName !== "익명") {
+    result = result.split(userName).join("사용자");
 
-      if (userName.length === 3) {
-        const firstName = userName.substring(1);
-        result = result.split(firstName).join("사용자");
-      }
+    if (userName.includes('@')) {
+      const emailPrefix = userName.split('@')[0];
+      result = result.split(emailPrefix).join("사용자");
     }
 
-    if (targetName && targetName !== "익명의 사용자") {
-
-      result = result.split(targetName).join("상대방");
-      
-
-      if (targetName.length === 3) {
-        const firstName = targetName.substring(1);
-        result = result.split(firstName).join("상대방");
-      }
+    if (userName.length === 3) {
+      const firstName = userName.substring(1);
+      result = result.split(firstName).join("사용자");
     }
+  }
 
-    result = result.split("본인").join("사용자");
-    
-    return result;
-  };
+  if (targetName && targetName !== "익명의 사용자") {
+    result = result.split(targetName).join("상대방");
+
+    if (targetName.length === 3) {
+      const firstName = targetName.substring(1);
+      result = result.split(firstName).join("상대방");
+    }
+  }
+
+  result = result.split("본인").join("사용자");
+  return result;
+};
 
   const getAnonymizedItem = (item: RankingItem): RankingItem => {
-    return {
-      ...item,
-      analysisItems: item.analysisItems.map(ai => ({
-        ...ai,
-        behavior: anonymizeText(ai.behavior, item.userName, item.targetName),
-        description: anonymizeText(ai.description, item.userName, item.targetName),
-        evidence: anonymizeText(ai.evidence, item.userName, item.targetName),
-      })),
-      compatibilityIssues: item.compatibilityIssues.map(ci => ({
-        ...ci,
-        issue: anonymizeText(ci.issue, item.userName, item.targetName),
-        detail: anonymizeText(ci.detail, item.userName, item.targetName),
-      })),
-      finalVerdict: {
-        ...item.finalVerdict,
-        comment: anonymizeText(item.finalVerdict.comment, item.userName, item.targetName),
-      }
-    };
+  return {
+    ...item,
+    analysisItems: (item.analysisItems ?? []).map(ai => ({
+      ...ai,
+      behavior: anonymizeText(ai.behavior, item.userName, item.targetName),
+      description: anonymizeText(ai.description, item.userName, item.targetName),
+      evidence: anonymizeText(ai.evidence, item.userName, item.targetName),
+    })),
+    compatibilityIssues: (item.compatibilityIssues ?? []).map(ci => ({
+      ...ci,
+      issue: anonymizeText(ci.issue, item.userName, item.targetName),
+      detail: anonymizeText(ci.detail, item.userName, item.targetName),
+    })),
+    finalVerdict: {
+      ...item.finalVerdict,
+      comment: anonymizeText(item.finalVerdict?.comment, item.userName, item.targetName),
+    }
   };
+};
 
   if (selectedItem) {
     const anonymizedItem = getAnonymizedItem(selectedItem);

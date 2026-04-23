@@ -28,7 +28,7 @@ const Header = () => {
       <Nav>
         {user ? (
           <>
-            <UserInfo>{user.email?.split('@')[0]}</UserInfo>
+            <NavLink href="/mypage">마이페이지</NavLink>
             <NavButton onClick={handleLogout}>로그아웃</NavButton>
           </>
         ) : (
