@@ -36,7 +36,15 @@ const SignupPage = () => {
       router.push('/');
     } catch (err: any) {
       console.error(err);
-      setErrorMsg(err.message || '회원가입에 실패했습니다.');
+      if (err.code === 'auth/email-already-in-use') {
+        setErrorMsg('이미 가입된 이메일입니다. 로그인해 주세요.');
+      } else if (err.code === 'auth/weak-password') {
+        setErrorMsg('비밀번호는 6자리 이상이어야 합니다.');
+      } else if (err.code === 'auth/invalid-email') {
+        setErrorMsg('유효하지 않은 이메일 형식입니다.');
+      } else {
+        setErrorMsg(err.message || '회원가입에 실패했습니다.');
+      }
     } finally {
       setLoading(false);
     }
