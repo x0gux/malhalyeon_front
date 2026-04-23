@@ -160,6 +160,8 @@ const Content = styled.div`
   padding: 40px 20px;
   display: flex;
   flex-direction: column;
+  width : 100%;
+  justify-content: center;
   gap: 32px;
 `;
 
