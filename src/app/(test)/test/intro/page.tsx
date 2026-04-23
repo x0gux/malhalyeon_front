@@ -3,17 +3,24 @@
 import styled from '@emotion/styled';
 import font from '@/_packages/design-system/src/font';
 import {Footer} from '@/_components/Layout';
+import { useAuthStore } from '@/_store/authStore';
 import { useRouter } from 'next/navigation';
-import {Button} from '@/_components/common';
+import { Button } from '@/_components/common';
 
 const TestPage = () => {
   const router = useRouter();
+  const { user } = useAuthStore();
 
   const handleSkip = () => {
     router.push('/test/targetname');
   };
 
   const handleStartTest = () => {
+    if (!user) {
+      alert('연애 유형 분석은 로그인이 필요한 기능이에요.\n로그인 페이지로 이동할게요!');
+      router.push('/login');
+      return;
+    }
     router.push('/check/1');
   };
 
@@ -26,13 +33,14 @@ const TestPage = () => {
             연애유형을 알아보고싶어요
           </Title>
           <SubTitle>
-            더욱 자세한 정보를 드리기 위해 진행하지만 건너뛸수있어요
+            연애 유형 분석은 로그인이 필요한 기능이에요.<br />
+            건너뛰고 바로 분석할 수도 있어요!
           </SubTitle>
         </HeaderArea>
 
         <ButtonArea>
           <Button type='secondary' text='건너뛸게요' onClick={handleSkip} />
-           <Button type='primary' text='검사할게요' onClick={handleStartTest} />
+          <Button type='primary' text='검사할게요' onClick={handleStartTest} />
         </ButtonArea>
       </ContentArea>
       <Footer />

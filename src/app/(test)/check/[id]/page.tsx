@@ -10,6 +10,8 @@ import { Footer } from '@/_components/Layout';
 import axios from 'axios';
 import { use } from 'react';
 
+import { useAuthStore } from '@/_store/authStore';
+
 interface QuizOption {
   id: string;
   text: string;
@@ -28,13 +30,20 @@ const CheckPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const id = Number(rawId);
   const router = useRouter();
   const { addAnswer } = useTestStore();
+  const { user, isLoading: isAuthLoading } = useAuthStore();
 
   const [quiz, setQuiz] = useState<QuizItem | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!isAuthLoading && !user) {
+      router.replace('/test/intro');
+      return;
+    }
+
     const fetch = async () => {
+      if (!user) return;
       setLoading(true);
       setSelected(null);
       try {
@@ -47,7 +56,7 @@ const CheckPage = ({ params }: { params: Promise<{ id: string }> }) => {
       }
     };
     fetch();
-  }, [id]);
+  }, [id, user, isAuthLoading]);
 
   const handleNext = () => {
     if (!selected) return;
