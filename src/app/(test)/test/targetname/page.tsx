@@ -31,7 +31,7 @@ const TestPage = () => {
             입력해주세요
           </Title>
           <SubTitle>
-            카카오톡 이름과 같은 이름을 입력해주세요
+            데이터에 상대이름과 같은 이름을 입력해주세요
           </SubTitle>
 
           <TestInput type="text" placeholder='이름을 입력해주세요' value={targetName} onChange={(e) => setTargetNames(e.target.value)} />

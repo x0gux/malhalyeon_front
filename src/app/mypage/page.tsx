@@ -111,7 +111,7 @@ const MyPage = () => {
               <Placeholder>
                 <PlaceholderIcon>🔍</PlaceholderIcon>
                 <PlaceholderText>분석 히스토리가 최소 2개 이상 쌓여야 패턴을 분석할 수 있습니다.<br/><strong>분석을 더 해보세요!</strong></PlaceholderText>
-                <AnalyzeButton onClick={() => router.push('/test/upload')}>분석하러 가기</AnalyzeButton>
+                <AnalyzeButton onClick={() => router.push('/test/targetname')}>분석하러 가기</AnalyzeButton>
               </Placeholder>
             ) : isPatternLoading ? (
               <Placeholder>AI가 당신의 패턴을 분석 중입니다...</Placeholder>
