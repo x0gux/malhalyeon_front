@@ -7,8 +7,11 @@ import {
   orderBy, 
   limit, 
   serverTimestamp,
-  Timestamp
+  Timestamp,
+  setDoc,
+  doc
 } from "firebase/firestore";
+import { User } from "firebase/auth";
 
 export interface RankingItem {
   id?: string;
@@ -21,6 +24,31 @@ export interface RankingItem {
   finalVerdict: any;
   createdAt: Timestamp;
 }
+
+export interface UserProfile {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL?: string | null;
+  createdAt: Timestamp | any;
+}
+
+
+export const saveUser = async (user: User) => {
+  try {
+    const userData = {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      createdAt: serverTimestamp(),
+    };
+    await setDoc(doc(db, "users", user.uid), userData);
+  } catch (error) {
+    console.error("Error saving user: ", error);
+    throw error;
+  }
+};
 
 
 export const saveToRanking = async (data: any, userName: string) => {

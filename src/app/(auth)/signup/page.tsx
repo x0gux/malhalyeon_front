@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/_components/common';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '@/_lib/firebase';
+import { saveUser } from '@/_lib/database';
 import Link from 'next/link';
 
 const SignupPage = () => {
@@ -27,6 +28,10 @@ const SignupPage = () => {
       setErrorMsg('');
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, { displayName: name });
+      
+      // Save user profile to Firestore
+      await saveUser(userCredential.user);
+      
       alert('회원가입 성공!');
       router.push('/');
     } catch (err: any) {
