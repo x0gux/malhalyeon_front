@@ -137,10 +137,7 @@ const RankingPage = () => {
           </RankingList>
         )}
       </ContentArea>
-      <FooterContainer>
-         <HomeButton onClick={() => router.push('/')}>홈으로 돌아가기</HomeButton>
-         <Footer />
-      </FooterContainer>
+      <Footer />
     </PageLayout>
   );
 };
