@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { useAuthStore } from '@/_store/authStore';
 import { getUserHistory, getUserProfile } from '@/_lib/database';
 import { Footer } from '@/_components/Layout';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
 const MyPage = () => {
@@ -72,7 +72,6 @@ const MyPage = () => {
   return (
     <Container>
       <Content>
-        {/* 상단 - 내 연애유형 배지 */}
         <Section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <Title>내 연애 유형</Title>
           <BadgeCard>
@@ -88,7 +87,6 @@ const MyPage = () => {
           </BadgeCard>
         </Section>
 
-        {/* 중단 - 역대 분석 히스토리 */}
         <Section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
           <Title>분석 히스토리 <Count>{history.length}</Count></Title>
           <HistoryList>
@@ -106,7 +104,6 @@ const MyPage = () => {
           </HistoryList>
         </Section>
 
-        {/* 하단 - 나의 연애 패턴 리포트 */}
         <Section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <Title>나의 연애 패턴 리포트</Title>
           <ReportCard>
@@ -141,8 +138,8 @@ const MyPage = () => {
             )}
           </ReportCard>
         </Section>
-        <Footer />
       </Content>
+      <Footer />
     </Container>
   );
 };
@@ -154,20 +151,18 @@ const Container = styled.div`
   min-height: 100vh;
   max-width: 500px;
   margin: 0 auto;
+  background-color: #ffffff;
 `;
-
 const Content = styled.div`
-  padding: 40px 20px;
+  padding: 40px 20px 120px 20px;
   display: flex;
   flex-direction: column;
-  width : 100%;
-  justify-content: center;
+  width: 100%;
   gap: 32px;
 `;
 
 const Section = styled(motion.section)`
   width: 100%;
-  margin-bottom: 64px;
 `;
 
 const Title = styled.h2`
