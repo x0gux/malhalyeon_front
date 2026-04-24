@@ -29,57 +29,60 @@ const RankingPage = () => {
   }, []);
 
   const anonymizeText = (text: string | null | undefined, userName: string, targetName: string): string => {
-  // 문자열이 아니면 빈 문자열로 처리
   if (!text || typeof text !== 'string') return '';
   
   let result = text;
 
-  if (!userName) return result;
+  // 1. 기본적인 이메일 및 @아이디 필터링
+  result = result.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "익명메일");
+  result = result.replace(/@[a-zA-Z0-9._]+/g, "익명ID");
 
-  if (userName && userName !== "익명") {
-    result = result.split(userName).join("사용자");
+  const filterName = (name: string, replacement: string) => {
+    if (!name || name === "익명" || name === "익명의 사용자" || name === "익명사용자") return;
+    
+    // 특수문자 이스케이프 및 전체 이름 교체
+    const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(escapedName, 'gi');
+    result = result.replace(regex, replacement);
 
-    if (userName.includes('@')) {
-      const emailPrefix = userName.split('@')[0];
-      result = result.split(emailPrefix).join("사용자");
+    // 한국 이름 3자 이상인 경우만 성 제외 이름 마스킹
+    if (name.length >= 3 && name.length <= 4 && /^[가-힣]+$/.test(name)) {
+      const firstName = name.substring(1);
+      if (firstName.length >= 1) {
+        result = result.split(firstName).join(replacement);
+      }
     }
+  };
 
-    if (userName.length === 3) {
-      const firstName = userName.substring(1);
-      result = result.split(firstName).join("사용자");
-    }
-  }
-
-  if (targetName && targetName !== "익명의 사용자") {
-    result = result.split(targetName).join("상대방");
-
-    if (targetName.length === 3) {
-      const firstName = targetName.substring(1);
-      result = result.split(firstName).join("상대방");
-    }
-  }
+  filterName(userName, "사용자");
+  filterName(targetName, "상대방");
 
   result = result.split("본인").join("사용자");
   return result;
 };
 
   const getAnonymizedItem = (item: RankingItem): RankingItem => {
+  const u = item.userName || '';
+  const t = item.targetName || '';
+  
   return {
     ...item,
+    userType: anonymizeText(item.userType, u, t),
     analysisItems: (item.analysisItems ?? []).map(ai => ({
       ...ai,
-      behavior: anonymizeText(ai.behavior, item.userName, item.targetName),
-      description: anonymizeText(ai.description, item.userName, item.targetName),
-      evidence: anonymizeText(ai.evidence, item.userName, item.targetName),
+      behavior: anonymizeText(ai.behavior, u, t),
+      description: anonymizeText(ai.description, u, t),
+      evidence: anonymizeText(ai.evidence, u, t),
     })),
     compatibilityIssues: (item.compatibilityIssues ?? []).map(ci => ({
       ...ci,
-      issue: anonymizeText(ci.issue, item.userName, item.targetName),
-      detail: anonymizeText(ci.detail, item.userName, item.targetName),
+      issue: anonymizeText(ci.issue, u, t),
+      detail: anonymizeText(ci.detail, u, t),
     })),
     finalVerdict: {
       ...item.finalVerdict,
-      comment: anonymizeText(item.finalVerdict?.comment, item.userName, item.targetName),
+      status: anonymizeText(item.finalVerdict?.status, u, t),
+      comment: anonymizeText(item.finalVerdict?.comment, u, t),
     }
   };
 };
