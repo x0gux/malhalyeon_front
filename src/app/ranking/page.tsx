@@ -29,6 +29,21 @@ const RankingPage = () => {
     fetchRanking();
   }, []);
 
+  if(list.length == 0 ){
+    return(
+      <PageLayout>
+        <ContentArea>
+          <HeaderArea>
+            <Title>명예의 전당</Title>
+            <SubTitle>가장 최악의 연애를 한 사람들의 기록입니다.</SubTitle>
+          </HeaderArea>
+
+          <LoadingText>등록된 영수증이 없습니다</LoadingText>
+        </ContentArea>
+        <Footer />
+      </PageLayout>
+    )
+  }
 
 
   if (selectedItem) {
