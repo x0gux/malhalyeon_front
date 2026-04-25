@@ -33,10 +33,24 @@ const handleStartTest = async () => {
       return;
     }
 
+    // 이전 결과 초기화
+    setResultData(null);
+
     try {
       setLoading(true);
       const result = await uploadCsv(file, targetName, answers);
-      setResultData(result);
+      
+      // 결과 데이터가 올바르지 않으면 에러 발생시켜 result 페이지 이동 방지
+      if (!result || !result.analysis_items) {
+        throw new Error("분석 결과를 받아오지 못했습니다.");
+      }
+
+      const enrichedResult = {
+        ...result,
+        requestUid: user?.uid || null
+      };
+      
+      setResultData(enrichedResult);
       
       // 유저 타입이 결과에 포함되어 있고 로그인 상태라면 프로필 업데이트
       if (user && result.user_type && result.user_type !== "미검사") {
@@ -49,7 +63,7 @@ const handleStartTest = async () => {
         }
       }
 
-      console.log(result);
+      console.log(enrichedResult);
       router.push('/test/result');
     } catch (err) {
       console.error(err);

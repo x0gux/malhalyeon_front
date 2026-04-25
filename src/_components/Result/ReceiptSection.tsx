@@ -34,6 +34,7 @@ interface ReceiptData {
     target_name: string;
   };
   user_type?: string;
+  requestUid?: string | null;
 }
 
 interface ReceiptSectionProps {
@@ -56,10 +57,17 @@ const ReceiptSection = ({ data, showShare = true }: ReceiptSectionProps) => {
 
   useEffect(() => {
     const saveHistory = async () => {
-      if (auth.currentUser && !hasSavedRef.current) {
+      // requestUid가 없거나 null이면 저장하지 않고 즉시 종료 (방어 코드)
+      if (!data.requestUid) {
+        console.warn("No requestUid found. Skipping history save.");
+        return;
+      }
+
+      const uidToSave = data.requestUid;
+      if (!hasSavedRef.current) {
         try {
           hasSavedRef.current = true;
-          await saveToUserHistory(auth.currentUser.uid, data);
+          await saveToUserHistory(uidToSave, data);
           console.log("History saved successfully");
         } catch (err) {
           console.error("Error saving history:", err);
