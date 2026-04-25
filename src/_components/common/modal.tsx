@@ -47,7 +47,6 @@ const Modal = ({
 }: ModalProps) => {
   const titleId = useId();
 
-  // ESC 닫기 + body scroll lock
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -86,16 +85,13 @@ const Modal = ({
         aria-labelledby={titleId}
         isOpen={isOpen}
       >
-        {/* ── Header ── */}
         <ModalHeader>
           {title && <ModalTitle id={titleId}>{title}</ModalTitle>}
           {subtitle && <ModalSubtitle>{subtitle}</ModalSubtitle>}
         </ModalHeader>
 
-        {/* ── Body ── */}
         <ModalBody>{children}</ModalBody>
 
-        {/* ── Footer ── */}
         <ModalFooter>
           <NextButton onClick={handleNext} type="button">
             {nextButtonLabel}
@@ -111,10 +107,10 @@ export default Modal;
 const ModalOverlay = styled.div<{ isOpen: boolean }>`
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: 3;
 
   display: flex;
-  align-items: flex-end; /* bottom-sheet: 하단 정렬 */
+  align-items: center; 
   justify-content: center;
 
   background-color: rgba(180, 180, 180, 0.55);
@@ -129,9 +125,9 @@ const ModalOverlay = styled.div<{ isOpen: boolean }>`
 
 const ModalWrapper = styled.div<{ isOpen: boolean }>`
   width: 100%;
-  max-width: 480px; /* 태블릿/데스크탑 대응 */
+  max-width: 300px;
   background-color: #ffffff;
-  border-radius: 20px 20px 0 0;
+  border-radius: 20px;
   box-shadow: 0px -4px 20px rgba(0, 0, 0, 0.1);
 
   display: flex;

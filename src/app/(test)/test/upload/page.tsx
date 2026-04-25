@@ -40,13 +40,7 @@ const handleStartTest = async () => {
       
       // 유저 타입이 결과에 포함되어 있고 로그인 상태라면 프로필 업데이트
       if (user && result.user_type && result.user_type !== "미검사") {
-        // 결과 JSON에서 user_type_name을 기반으로 데이터를 찾거나, 
-        // 간단하게 타입명만 저장할 수도 있지만 여기서는 텍스트로 저장
-        // 실제로는 quiz/submit에서 받은 데이터를 저장하는 게 좋음
-        // 여기서는 분석 결과에 포함된 type_name을 저장
         try {
-          // 백엔드 routes/analyze.py에서 user_type_name을 result.user_type에 넣음
-          // 우리는 mypage에서 profile.userType.type_name을 쓰기로 했으므로 형식을 맞춤
           await updateUserData(user.uid, { 
             userType: { type_name: result.user_type } 
           });
@@ -73,7 +67,7 @@ const handleStartTest = async () => {
             사용자님의 대화상대와 나눈<br />
             대화내용을 업로드해주세요
           </Title>
-          <SubTitle>csv와 txt만 업로드가능해요 - <HowtoButton onClick={() => setIsModalOpen(true)}>How to?</HowtoButton></SubTitle>
+          <SubTitle>csv와 txt,html,htm 만 업로드가능해요 - <HowtoButton onClick={() => setIsModalOpen(true)}>어떻게 하나요?</HowtoButton></SubTitle>
 
           <FileInput
             id="file-upload"
