@@ -41,6 +41,7 @@ export const metadata: Metadata = {
   verification: {
     google: "WxC9XCYGgpyXBf4Kql2ngi0NF4LtBHme31-ndCBkPcE",
   },
+  
 };
 
 import AuthProvider from "@/_components/AuthProvider";
