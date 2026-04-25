@@ -14,13 +14,14 @@ const kakaoSteps = [
 ];
 
 const instaSteps = [
-  { img: '/images/insta_1.svg', text: '설정 및 활동 메뉴를 엽니다.' },
-  { img: '/images/insta_2.svg', text: '내 정보 다운로드를 선택합니다.' },
-  { img: '/images/insta_3.svg', text: '다운로드 요청을 누릅니다.' },
-  { img: '/images/insta_4.svg', text: '정보를 다운로드할 계정을 선택합니다.' },
-  { img: '/images/insta_5.svg', text: '전체 정보 다운로드를 선택합니다.' },
-  { img: '/images/insta_6.svg', text: '파일 형식을 선택합니다.' },
-  { img: '/images/insta_7.svg', text: '다운로드 요청을 완료합니다.' },
+  { img: '/images/insta_1.svg', text: '설정에서 내보내기를 검색합니다.' },
+  { img: '/images/insta_2.svg', text: '내 정보 다운로드에서 내보내기만들기를 선택합니다.' },
+  { img: '/images/insta_3.svg', text: '기기로 내보내기를 선택합니다.' },
+  { img: '/images/insta_4.svg', text: '내보내기 확인에서 형식을 html로 선택후 정보 맞춤 설정에 들어갑니다.' },
+  { img: '/images/insta_5.svg', text: '메세지만 선택후 나머지를 전부 선택취소합니다.' },
+  { img: '/images/insta_6.svg', text: '전체 기간을 선택합니다.' },
+  { img: '/images/insta_7.svg', text: '다운로드 요청을 완료한 후 몇분후에 알림이 옵니다.' },
+  { img: '/images/insta_8.svg', text: '사진의 내용대로 진행합니다'},
 ];
 
 const overlayFadeIn = keyframes`
