@@ -3,7 +3,7 @@
 import styled from '@emotion/styled';
 import font from '@/_packages/design-system/src/font';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/_components/common';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/_lib/firebase';
@@ -11,6 +11,7 @@ import Link from 'next/link';
 
 const LoginPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -25,7 +26,9 @@ const LoginPage = () => {
       setLoading(true);
       setErrorMsg('');
       await signInWithEmailAndPassword(auth, email, password);
-      router.push('/');
+      
+      const redirectPath = searchParams.get('redirect') || '/';
+      router.push(redirectPath);
     } catch (err: any) {
       console.error(err);
       setErrorMsg('이메일 또는 비밀번호가 올바르지 않습니다.');
@@ -64,7 +67,9 @@ const LoginPage = () => {
             text={loading ? '로그인 중...' : '로그인하기'} 
             onClick={handleLogin} 
           />
-          <SignupLink href="/signup">아직 계정이 없으신가요? 회원가입</SignupLink>
+          <SignupLink href={searchParams.get('redirect') ? `/signup?redirect=${searchParams.get('redirect')}` : "/signup"}>
+            아직 계정이 없으신가요? 회원가입
+          </SignupLink>
         </ButtonArea>
       </ContentArea>
     </PageLayout>

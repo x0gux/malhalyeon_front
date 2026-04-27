@@ -80,7 +80,7 @@ const ReceiptSection = ({ data, showShare = true }: ReceiptSectionProps) => {
   const handleShare = async () => {
     if (!auth.currentUser) {
       alert("로그인이 필요한 기능입니다.");
-      router.push("/login");
+      router.push("/login?redirect=/test/result");
       return;
     }
 

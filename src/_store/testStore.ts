@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 interface TestState {
   targetName: string;
@@ -12,17 +13,29 @@ interface TestState {
   clearAnswers: () => void;
 }
 
-export const useTestStore = create<TestState>((set) => ({
-  targetName: '',
-  csvfile : null,
-  setTargetName: (name: string) => set({ targetName: name }),
-  setCsvfile: (file: File) => set({ csvfile: file }),
-  resultData : null,
-  setResultData : (data: any) => set({ resultData: data }),
-  answers: [],
-  addAnswer: (answer) => set((state) => ({
-    answers: [...state.answers.filter(a => a.id !== answer.id), answer]
-  })),
-  clearAnswers: () => set({ answers: [] }),
-}));
+export const useTestStore = create<TestState>()(
+  persist(
+    (set) => ({
+      targetName: '',
+      csvfile : null,
+      setTargetName: (name: string) => set({ targetName: name }),
+      setCsvfile: (file: File) => set({ csvfile: file }),
+      resultData : null,
+      setResultData : (data: any) => set({ resultData: data }),
+      answers: [],
+      addAnswer: (answer) => set((state) => ({
+        answers: [...state.answers.filter(a => a.id !== answer.id), answer]
+      })),
+      clearAnswers: () => set({ answers: [] }),
+    }),
+    {
+      name: 'test-storage',
+      partialize: (state) => ({
+        targetName: state.targetName,
+        resultData: state.resultData,
+        answers: state.answers,
+      }),
+    }
+  )
+);
 

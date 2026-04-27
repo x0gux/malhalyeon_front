@@ -3,7 +3,7 @@
 import styled from '@emotion/styled';
 import font from '@/_packages/design-system/src/font';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/_components/common';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '@/_lib/firebase';
@@ -12,6 +12,7 @@ import Link from 'next/link';
 
 const SignupPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -33,7 +34,8 @@ const SignupPage = () => {
       await saveUser(userCredential.user);
       
       alert('회원가입 성공!');
-      router.push('/');
+      const redirectPath = searchParams.get('redirect') || '/';
+      router.push(redirectPath);
     } catch (err: any) {
       console.error(err);
       if (err.code === 'auth/email-already-in-use') {
@@ -86,7 +88,9 @@ const SignupPage = () => {
             text={loading ? '가입 중...' : '회원가입'} 
             onClick={handleSignup} 
           />
-          <LoginLink href="/login">이미 계정이 있으신가요? 로그인</LoginLink>
+          <LoginLink href={searchParams.get('redirect') ? `/login?redirect=${searchParams.get('redirect')}` : "/login"}>
+            이미 계정이 있으신가요? 로그인
+          </LoginLink>
         </ButtonArea>
       </ContentArea>
     </PageLayout>

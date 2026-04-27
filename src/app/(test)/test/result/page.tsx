@@ -4,20 +4,26 @@ import { HeroSection, ReceiptSection, AnalysisDashboard } from "@/_components/Re
 import styled from "@emotion/styled";
 import { useTestStore } from "@/_store/testStore";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 
 const TestResultPage = () => {
   const { resultData } = useTestStore();
+  const [isHydrated, setIsHydrated] = useState(false);
   const router = useRouter();
 
+  // Handle hydration for persisted store
   useEffect(() => {
-    if (!resultData) {
+    setIsHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (isHydrated && !resultData) {
       router.push("/test/upload");
     }
-  }, [resultData, router]);
+  }, [isHydrated, resultData, router]);
   
-  if (!resultData) return null;
+  if (!isHydrated || !resultData) return null;
   
   return (
     <MainContainer>
