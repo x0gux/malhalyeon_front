@@ -12,7 +12,7 @@ interface AnalysisItem {
   behavior: string;
   count: number;
   description: string;
-  evidence: string;
+  evidence: string | null;
   likability_score: number;
 }
 
@@ -57,23 +57,25 @@ const ReceiptSection = ({ data, showShare = true }: ReceiptSectionProps) => {
 
   useEffect(() => {
     const saveHistory = async () => {
-      // requestUid가 없거나 null이면 저장하지 않고 즉시 종료 (방어 코드)
       if (!data.requestUid) {
         console.warn("No requestUid found. Skipping history save.");
         return;
       }
 
-      const uidToSave = data.requestUid;
-      if (!hasSavedRef.current) {
-        try {
-          hasSavedRef.current = true;
-          await saveToUserHistory(uidToSave, data);
-          console.log("History saved successfully");
-        } catch (err) {
-          console.error("Error saving history:", err);
-        }
+      if (hasSavedRef.current) return;
+      hasSavedRef.current = true;
+
+      // requestUid는 프론트 전용 필드이므로 Firestore에 넘기는 payload에서 제거
+      const { requestUid, ...firestoreData } = data;
+
+      try {
+        await saveToUserHistory(data.requestUid, firestoreData);
+        console.log("History saved successfully");
+      } catch (err) {
+        console.error("Error saving history:", err);
       }
     };
+
     saveHistory();
   }, [data]);
 
@@ -87,7 +89,8 @@ const ReceiptSection = ({ data, showShare = true }: ReceiptSectionProps) => {
     if (confirm("이 분석 결과를 명예의 전당(랭킹)에 등록하시겠습니까?\n(상대방 이름과 사용자님의 신분 모두 익명으로 보호되어 등록됩니다.)")) {
       try {
         setIsSharing(true);
-        await saveToRanking(data, auth.currentUser.displayName || auth.currentUser.email || "익명");
+        const { requestUid, ...firestoreData } = data;
+        await saveToRanking(firestoreData, auth.currentUser.displayName || auth.currentUser.email || "익명");
         alert("명예의 전당에 성공적으로 등록되었습니다!");
         router.push("/ranking");
       } catch (err) {
@@ -97,7 +100,6 @@ const ReceiptSection = ({ data, showShare = true }: ReceiptSectionProps) => {
       }
     }
   };
-
 
   return (
     <Container
@@ -162,7 +164,6 @@ const ReceiptSection = ({ data, showShare = true }: ReceiptSectionProps) => {
 
         <DashedLine />
 
-  
         <VerdictBox>
           <VerdictStatus>{data.final_verdict.status}</VerdictStatus>
           <Verdict>{data.final_verdict.comment}</Verdict>
@@ -190,7 +191,6 @@ const ReceiptSection = ({ data, showShare = true }: ReceiptSectionProps) => {
     </Container>
   );
 };
-
 
 export default ReceiptSection;
 

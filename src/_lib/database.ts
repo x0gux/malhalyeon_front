@@ -35,6 +35,19 @@ export interface UserProfile {
   createdAt: Timestamp | any;
 }
 
+// Firestore는 undefined 값을 허용하지 않으므로 저장 전 재귀적으로 제거
+const stripUndefined = (obj: Record<string, any>): Record<string, any> => {
+  return Object.fromEntries(
+    Object.entries(obj)
+      .filter(([_, v]) => v !== undefined)
+      .map(([k, v]) => [
+        k,
+        v !== null && typeof v === 'object' && !Array.isArray(v) && !(v instanceof Timestamp)
+          ? stripUndefined(v)
+          : v,
+      ])
+  );
+};
 
 export const saveUser = async (user: User) => {
   try {
@@ -42,7 +55,7 @@ export const saveUser = async (user: User) => {
       uid: user.uid,
       email: user.email,
       displayName: user.displayName,
-      photoURL: user.photoURL,
+      photoURL: user.photoURL ?? null,
       createdAt: serverTimestamp(),
     };
     await setDoc(doc(db, "users", user.uid), userData);
@@ -52,21 +65,22 @@ export const saveUser = async (user: User) => {
   }
 };
 
-
 export const saveToRanking = async (data: any, userName: string) => {
   try {
-    const totalScore = data.analysis_items.reduce((sum: number, item: any) => sum + item.likability_score, 0);
-    
-    const rankingData = {
-      targetName: data.receipt_info.target_name,
-      totalScore: totalScore,
+    const totalScore = (data.analysis_items ?? []).reduce(
+      (sum: number, item: any) => sum + (item.likability_score ?? 0), 0
+    );
+
+    const rankingData = stripUndefined({
+      targetName: data.receipt_info?.target_name ?? '알 수 없음',
+      totalScore,
       userName: userName || "익명",
-      userType: data.user_type || "미검사",
-      analysisItems: data.analysis_items,
-      compatibilityIssues: data.compatibility_issues || [],
-      finalVerdict: data.final_verdict,
+      userType: data.user_type ?? "미검사",
+      analysisItems: data.analysis_items ?? [],
+      compatibilityIssues: data.compatibility_issues ?? [],
+      finalVerdict: data.final_verdict ?? null,
       createdAt: serverTimestamp(),
-    };
+    });
 
     const docRef = await addDoc(collection(db, "ranking"), rankingData);
     return docRef.id;
@@ -96,17 +110,20 @@ export const getRankingList = async (limitCount = 20) => {
 
 export const saveToUserHistory = async (uid: string, data: any) => {
   try {
-    const totalScore = data.analysis_items.reduce((sum: number, item: any) => sum + item.likability_score, 0);
-    
-    const historyData = {
-      targetName: data.receipt_info.target_name,
-      totalScore: totalScore,
-      userType: data.user_type || "미검사",
-      analysisItems: data.analysis_items,
-      compatibilityIssues: data.compatibility_issues || [],
-      finalVerdict: data.final_verdict,
+    const totalScore = (data.analysis_items ?? []).reduce(
+      (sum: number, item: any) => sum + (item.likability_score ?? 0), 0
+    );
+
+    // requestUid 등 Firestore에 저장하면 안 되는 프론트 전용 필드는 명시적으로 제외
+    const historyData = stripUndefined({
+      targetName: data.receipt_info?.target_name ?? '알 수 없음',
+      totalScore,
+      userType: data.user_type ?? "미검사",
+      analysisItems: data.analysis_items ?? [],
+      compatibilityIssues: data.compatibility_issues ?? [],
+      finalVerdict: data.final_verdict ?? null,
       createdAt: serverTimestamp(),
-    };
+    });
 
     const docRef = await addDoc(collection(db, "users", uid, "history"), historyData);
     return docRef.id;
