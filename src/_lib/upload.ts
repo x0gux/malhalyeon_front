@@ -5,7 +5,6 @@ export const uploadCsv = async (file: File, targetName: string, answers?: any[])
     formData.append('file', file);
     formData.append('target_name', targetName);
 
-    // 퀴즈 답변이 있으면 유저 타입을 먼저 계산
     if (answers && answers.length > 0) {
         try {
             const quizResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/quiz/submit`, { answers });

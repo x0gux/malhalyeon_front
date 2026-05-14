@@ -86,7 +86,6 @@ const LoginPage = () => {
 
 export default LoginPage;
 
-// Styled Components
 const PageLayout = styled.div`
   display: flex;
   flex-direction: column;

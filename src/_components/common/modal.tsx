@@ -63,7 +63,6 @@ const Modal = ({
     };
   }, [isOpen, onClose]);
 
-  // Overlay 클릭 닫기
   const handleOverlayClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) onClose();

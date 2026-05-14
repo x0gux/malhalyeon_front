@@ -22,8 +22,6 @@ const TestResultPage = () => {
       router.push("/test/upload");
     }
   }, [isHydrated, resultData, router]);
-
-  // sanitize는 resultData가 바뀔 때만 재실행
   const safeData = useMemo(() => {
     if (!resultData) return null;
 
@@ -36,7 +34,7 @@ const TestResultPage = () => {
     try {
       return JSON.parse(cleanJson);
     } catch (e) {
-      // 파싱 실패 시 원본 반환 (최후 방어선)
+
       console.error("[sanitize] JSON parse failed, falling back to raw data", e);
       return resultData;
     }
@@ -61,7 +59,6 @@ const TestResultPage = () => {
 
 export default TestResultPage;
 
-// --- styled components (기존과 동일) ---
 
 const MainContainer = styled.main`
   width: 100%;

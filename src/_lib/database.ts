@@ -35,7 +35,6 @@ export interface UserProfile {
   createdAt: Timestamp | any;
 }
 
-// Firestore는 undefined 값을 허용하지 않으므로 저장 전 재귀적으로 제거
 const stripUndefined = (obj: Record<string, any>): Record<string, any> => {
   return Object.fromEntries(
     Object.entries(obj)
@@ -114,7 +113,6 @@ export const saveToUserHistory = async (uid: string, data: any) => {
       (sum: number, item: any) => sum + (item.likability_score ?? 0), 0
     );
 
-    // requestUid 등 Firestore에 저장하면 안 되는 프론트 전용 필드는 명시적으로 제외
     const historyData = stripUndefined({
       targetName: data.receipt_info?.target_name ?? '알 수 없음',
       totalScore,

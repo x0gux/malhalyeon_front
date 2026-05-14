@@ -87,7 +87,7 @@ const SubTitle = styled.p`
 
 const ButtonArea = styled.div`
   margin-top: auto;
-  margin-bottom: 30%; /* Adjust based on footer height */
+  margin-bottom: 30%;
   display: flex;
   flex-direction: column;
   gap: 15px;

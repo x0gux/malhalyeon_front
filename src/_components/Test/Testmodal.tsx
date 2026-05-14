@@ -51,7 +51,7 @@ const TestModal = ({ isOpen, onClose }: TestModalProps) => {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-      setStepIndex(0); // reset on open
+      setStepIndex(0);
     } else {
       document.body.style.overflow = 'unset';
     }

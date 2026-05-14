@@ -30,7 +30,7 @@ const SignupContent = () => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, { displayName: name });
       
-      // Save user profile to Firestore
+
       await saveUser(userCredential.user);
       
       alert('회원가입 성공!');
@@ -107,7 +107,6 @@ const SignupPage = () => {
 
 export default SignupPage;
 
-// Styled Components (Resembles test page layout)
 const PageLayout = styled.div`
   display: flex;
   flex-direction: column;

@@ -45,20 +45,16 @@ const AnalysisDashboard = ({ items }: DashboardProps) => {
     return () => window.removeEventListener('resize', updateWidth);
   }, []);
 
-  // 데이터 변환: Radar Chart용 (절대값으로 치명도 표시)
+
   const radarData = items.map(item => ({
     subject: item.behavior,
     A: Math.abs(item.likability_score),
     fullMark: 100,
   }));
 
-  // 데이터 변환: Bar Chart용
+
   const barData = items.slice().sort((a, b) => b.count - a.count);
-
-  // analysis_items는 최대 4개로 고정되므로 COLORS도 4개만 사용
   const COLORS = ['#FF4D4D', '#FF8A8A', '#FFC1C1', '#FFE4E4'];
-
-  // 총평: 가장 빈번한 항목과 가장 치명적인 항목이 동일할 경우 중복 문장 방지
   const mostFrequent = barData[0];
   const mostDangerous = items.reduce((max, i) =>
     Math.abs(i.likability_score) > Math.abs(max.likability_score) ? i : max
@@ -90,7 +86,6 @@ const AnalysisDashboard = ({ items }: DashboardProps) => {
                 dataKey="subject" 
                 tick={{ fill: '#666', fontSize: 11 }} 
               />
-              {/* domain을 실제 score 범위인 0~100으로 수정 */}
               <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
               <Radar
                 name="치명도"
