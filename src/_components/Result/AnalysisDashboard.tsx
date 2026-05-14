@@ -55,7 +55,18 @@ const AnalysisDashboard = ({ items }: DashboardProps) => {
   // 데이터 변환: Bar Chart용
   const barData = items.slice().sort((a, b) => b.count - a.count);
 
-  const COLORS = ['#FF4D4D', '#FF8A8A', '#FFC1C1', '#FFE4E4', '#FFEFEF'];
+  // analysis_items는 최대 4개로 고정되므로 COLORS도 4개만 사용
+  const COLORS = ['#FF4D4D', '#FF8A8A', '#FFC1C1', '#FFE4E4'];
+
+  // 총평: 가장 빈번한 항목과 가장 치명적인 항목이 동일할 경우 중복 문장 방지
+  const mostFrequent = barData[0];
+  const mostDangerous = items.reduce((max, i) =>
+    Math.abs(i.likability_score) > Math.abs(max.likability_score) ? i : max
+  );
+  const summaryText =
+    mostFrequent.behavior === mostDangerous.behavior
+      ? `'${mostFrequent.behavior}' 행동이 가장 빈번하고 가장 치명적으로 나타나고 있습니다.`
+      : `가장 빈번한 '${mostFrequent.behavior}' 행동과 가장 치명적인 '${mostDangerous.behavior}' 행동이 복합적으로 나타나고 있습니다.`;
 
   return (
     <DashboardContainer ref={containerRef}>
@@ -79,7 +90,8 @@ const AnalysisDashboard = ({ items }: DashboardProps) => {
                 dataKey="subject" 
                 tick={{ fill: '#666', fontSize: 11 }} 
               />
-              <PolarRadiusAxis angle={30} domain={[0, 10]} tick={false} axisLine={false} />
+              {/* domain을 실제 score 범위인 0~100으로 수정 */}
+              <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
               <Radar
                 name="치명도"
                 dataKey="A"
@@ -131,9 +143,7 @@ const AnalysisDashboard = ({ items }: DashboardProps) => {
       <SummaryBox>
         <SummaryText>
           <strong>분석 총평</strong><br />
-          {items.length > 0 ? (
-            `가장 빈번한 '${barData[0].behavior}' 행동과 가장 치명적인 '${items.reduce((max, i) => Math.abs(i.likability_score) > Math.abs(max.likability_score) ? i : max).behavior}' 행동이 복합적으로 나타나고 있습니다.`
-          ) : "분석된 행동 데이터가 부족합니다."}
+          {items.length > 0 ? summaryText : "분석된 행동 데이터가 부족합니다."}
         </SummaryText>
       </SummaryBox>
     </DashboardContainer>
@@ -193,4 +203,3 @@ const ChartWrapper = styled.div<{ height: number }>`
   min-width: 0;
   position: relative;
 `;
-
