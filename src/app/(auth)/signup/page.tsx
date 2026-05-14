@@ -2,7 +2,7 @@
 
 import styled from '@emotion/styled';
 import font from '@/_packages/design-system/src/font';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/_components/common';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
@@ -10,7 +10,7 @@ import { auth } from '@/_lib/firebase';
 import { saveUser } from '@/_lib/database';
 import Link from 'next/link';
 
-const SignupPage = () => {
+const SignupContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
@@ -94,6 +94,14 @@ const SignupPage = () => {
         </ButtonArea>
       </ContentArea>
     </PageLayout>
+  );
+};
+
+const SignupPage = () => {
+  return (
+    <Suspense fallback={<PageLayout />}>
+      <SignupContent />
+    </Suspense>
   );
 };
 

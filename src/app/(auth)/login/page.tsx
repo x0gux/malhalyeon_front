@@ -2,14 +2,14 @@
 
 import styled from '@emotion/styled';
 import font from '@/_packages/design-system/src/font';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/_components/common';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/_lib/firebase';
 import Link from 'next/link';
 
-const LoginPage = () => {
+const LoginContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
@@ -73,6 +73,14 @@ const LoginPage = () => {
         </ButtonArea>
       </ContentArea>
     </PageLayout>
+  );
+};
+
+const LoginPage = () => {
+  return (
+    <Suspense fallback={<PageLayout />}>
+      <LoginContent />
+    </Suspense>
   );
 };
 
