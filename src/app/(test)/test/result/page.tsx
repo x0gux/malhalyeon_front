@@ -4,15 +4,15 @@ import { HeroSection, ReceiptSection, AnalysisDashboard } from "@/_components/Re
 import styled from "@emotion/styled";
 import { useTestStore } from "@/_store/testStore";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-
+import { useEffect, useState, useMemo } from "react";
+import { auth } from "@/_lib/firebase";
+import { sanitizeResponse } from "@/_utils/sanitizeResponse";
 
 const TestResultPage = () => {
   const { resultData } = useTestStore();
   const [isHydrated, setIsHydrated] = useState(false);
   const router = useRouter();
 
-  // Handle hydration for persisted store
   useEffect(() => {
     setIsHydrated(true);
   }, []);
@@ -22,17 +22,36 @@ const TestResultPage = () => {
       router.push("/test/upload");
     }
   }, [isHydrated, resultData, router]);
-  
-  if (!isHydrated || !resultData) return null;
-  
+
+  // sanitize는 resultData가 바뀔 때만 재실행
+  const safeData = useMemo(() => {
+    if (!resultData) return null;
+
+    const targetName = resultData.receipt_info?.target_name ?? null;
+    const userName = auth.currentUser?.displayName ?? auth.currentUser?.email ?? null;
+
+    const rawJson = JSON.stringify(resultData);
+    const cleanJson = sanitizeResponse(rawJson, targetName, userName);
+
+    try {
+      return JSON.parse(cleanJson);
+    } catch (e) {
+      // 파싱 실패 시 원본 반환 (최후 방어선)
+      console.error("[sanitize] JSON parse failed, falling back to raw data", e);
+      return resultData;
+    }
+  }, [resultData]);
+
+  if (!isHydrated || !safeData) return null;
+
   return (
     <MainContainer>
       <HeroSection />
       <ScrollArea>
         <TopSpacer />
         <SheetContent>
-          <ReceiptSection data={resultData} />
-          <AnalysisDashboard items={resultData.analysis_items} />
+          <ReceiptSection data={safeData} />
+          <AnalysisDashboard items={safeData.analysis_items} />
           <Footer />
         </SheetContent>
       </ScrollArea>
@@ -41,6 +60,8 @@ const TestResultPage = () => {
 }
 
 export default TestResultPage;
+
+// --- styled components (기존과 동일) ---
 
 const MainContainer = styled.main`
   width: 100%;
@@ -60,16 +81,14 @@ const ScrollArea = styled.div`
   height: 100vh;
   overflow-y: scroll;
   z-index: 10;
-  
-  &::-webkit-scrollbar {
-    display: none;
-  }
+
+  &::-webkit-scrollbar { display: none; }
   -ms-overflow-style: none;
   scrollbar-width: none;
 `;
 
 const TopSpacer = styled.div`
-  height: 20vh; /* 배경 타이틀이 보일 공간 */
+  height: 20vh;
   width: 100%;
 `;
 
@@ -79,5 +98,3 @@ const SheetContent = styled.div`
   display: flex;
   flex-direction: column;
 `;
-
-

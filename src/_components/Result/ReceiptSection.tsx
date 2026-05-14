@@ -8,6 +8,8 @@ import { saveToRanking, saveToUserHistory } from "@/_lib/database";
 import { Button } from "@/_components/common";
 import { useRouter } from "next/navigation";
 
+
+
 interface AnalysisItem {
   behavior: string;
   count: number;
@@ -65,7 +67,6 @@ const ReceiptSection = ({ data, showShare = true }: ReceiptSectionProps) => {
       if (hasSavedRef.current) return;
       hasSavedRef.current = true;
 
-      // requestUid는 프론트 전용 필드이므로 Firestore에 넘기는 payload에서 제거
       const { requestUid, ...firestoreData } = data;
 
       try {
