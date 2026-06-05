@@ -170,6 +170,21 @@ const ReceiptSection = ({ data, showShare = true }: ReceiptSectionProps) => {
           <Verdict>{data.final_verdict.comment}</Verdict>
         </VerdictBox>
 
+        <DashedLine />
+
+        <SimulationArea>
+          <SimulationTitle>이 상대와 가상 대화 훈련하기</SimulationTitle>
+          <SimulationDesc>
+            분석된 유해 패턴을 기반으로 AI 상대방과 가상 대화를 나누며,<br />
+            감정적 휘둘림 없이 현명하게 대처하는 훈련을 해보세요.
+          </SimulationDesc>
+          <Button 
+            type="primary" 
+            text="대응 훈련 시뮬레이션 시작" 
+            onClick={() => router.push("/test/simulate")} 
+          />
+        </SimulationArea>
+
         {showShare && (
           <>
             <DashedLine />
@@ -353,5 +368,27 @@ const ShareDesc = styled.p`
   color: #999;
   text-align: center;
   line-height: 1.4;
+  margin-bottom: 8px;
+`;
+
+const SimulationArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 0;
+`;
+
+const SimulationTitle = styled.h4`
+  ${font.H2};
+  color: #333;
+  font-weight: 700;
+`;
+
+const SimulationDesc = styled.p`
+  ${font.P3};
+  color: #666;
+  text-align: center;
+  line-height: 1.45;
   margin-bottom: 8px;
 `;
