@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/_components/common';
 import { useState } from 'react';
 import { useTestStore } from '@/_store/testStore';
-import { uploadCsv } from '@/_lib/upload';
+import { uploadCsv, LoginRequiredError } from '@/_lib/upload';
 import TestModal from '@/_components/Test/Testmodal';
 import { useAuthStore } from '@/_store/authStore';
 import { updateUserData } from '@/_lib/database';
@@ -62,9 +62,13 @@ const handleStartTest = async () => {
         }
       }
       router.push('/test/result');
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert('분석 중 오류가 발생했어요.');
+      if (err instanceof LoginRequiredError) {
+        router.push('/login?redirect=/test/upload');
+      } else {
+        alert('분석 중 오류가 발생했어요.');
+      }
     } finally {
       setLoading(false);
     }
