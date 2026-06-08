@@ -1,6 +1,18 @@
 import axios from "axios";
+import { auth } from "./firebase";
+
+export class LoginRequiredError extends Error {
+    constructor() {
+        super('LOGIN_REQUIRED');
+        this.name = 'LoginRequiredError';
+    }
+}
 
 export const uploadCsv = async (file: File, targetName: string, answers?: any[]) => {
+    const user = auth.currentUser;
+    if (!user) throw new LoginRequiredError();
+
+    const idToken = await user.getIdToken();
     const formData = new FormData();
     formData.append('file', file);
     formData.append('target_name', targetName);
@@ -19,6 +31,7 @@ export const uploadCsv = async (file: File, targetName: string, answers?: any[])
     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/analyze`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${idToken}`,
         },
     });
     return response.data;

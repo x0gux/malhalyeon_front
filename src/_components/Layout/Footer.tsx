@@ -1,7 +1,6 @@
 'use client';
 
 import styled from "@emotion/styled";
-import Image from "next/image";
 import font from "@/_packages/design-system/src/font";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -12,23 +11,30 @@ const Footer = () => {
     return (
         <FooterLayout>
             <FooterItem onClick={() => { router.push("/test/intro") }}>
-                <FooterIcon 
-                    src="/test.svg" 
-                    active={pathname.includes('/test')} 
+                <FooterIcon
+                    src="/test.svg"
+                    active={pathname.includes('/test')}
                 />
                 <FooterText active={pathname.includes('/test')}>검사하기</FooterText>
             </FooterItem>
             <FooterItem onClick={() => { router.push("/") }}>
-                <FooterIcon 
-                    src="/home.svg" 
-                    active={pathname === '/'} 
+                <FooterIcon
+                    src="/home.svg"
+                    active={pathname === '/'}
                 />
                 <FooterText active={pathname === '/'}>홈</FooterText>
             </FooterItem>
+            <FooterItem onClick={() => { router.push("/community") }}>
+                <FooterIcon
+                    src="/community.svg"
+                    active={pathname.startsWith('/community')}
+                />
+                <FooterText active={pathname.startsWith('/community')}>커뮤니티</FooterText>
+            </FooterItem>
             <FooterItem onClick={() => { router.push("/ranking") }}>
-                <FooterIcon 
-                    src="/ranking.svg" 
-                    active={pathname === '/ranking'} 
+                <FooterIcon
+                    src="/ranking.svg"
+                    active={pathname === '/ranking'}
                 />
                 <FooterText active={pathname === '/ranking'}>랭킹</FooterText>
             </FooterItem>
