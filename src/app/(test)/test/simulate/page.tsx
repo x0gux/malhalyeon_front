@@ -55,7 +55,7 @@ const SimulationPage = () => {
 
   const analysisItems = resultData?.analysis_items || [];
   const dangerLevel = resultData?.danger_level || '주의';
-  const targetName = resultData?.receipt_info?.target_name || '상대방';
+  const targetName = '상대방';
 
   // Initialize simulation
   useEffect(() => {
@@ -71,7 +71,7 @@ const SimulationPage = () => {
             content: res.message
           }
         ]);
-        
+
         // Generate choices for the first message
         const firstHistory = [{ role: 'assistant', content: res.message }];
         const replyRes = await replySimulation(analysisItems, dangerLevel, firstHistory, '시뮬레이션 시작');
@@ -135,7 +135,7 @@ const SimulationPage = () => {
         { ...prev[prev.length - 1], feedback: res.feedback }, // keep feedback
         { role: 'assistant' as const, content: res.opponent_message }
       ]);
-      
+
       setChoices(res.choices);
       setTurn(res.turn);
     } catch (err) {
@@ -174,11 +174,11 @@ const SimulationPage = () => {
       <Header>
         <BackButton onClick={() => router.back()}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M15 19L8 12L15 5" stroke="#333" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M15 19L8 12L15 5" stroke="#333" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </BackButton>
         <TitleContainer>
-          <RoomName>{targetName}과의 대응 훈련</RoomName>
+          <RoomName>상대방과의 대응 훈련</RoomName>
           <DangerBadge danger={dangerLevel}>{dangerLevel} 등급</DangerBadge>
         </TitleContainer>
         <ProgressText>
@@ -319,7 +319,7 @@ const SimulationPage = () => {
               <ResultHeader>
                 <ResultCloseBtn onClick={() => setShowResult(false)}>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M18 6L6 18M6 6L18 18" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M18 6L6 18M6 6L18 18" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </ResultCloseBtn>
                 <ResultHeaderTitle>훈련 결과 리포트</ResultHeaderTitle>
@@ -831,10 +831,10 @@ const GradeCircle = styled.div<{ grade: string }>`
     grade === 'A'
       ? 'linear-gradient(135deg, #34c759 0%, #28a745 100%)'
       : grade === 'B'
-      ? 'linear-gradient(135deg, #007aff 0%, #0056b3 100%)'
-      : grade === 'C'
-      ? 'linear-gradient(135deg, #ff9500 0%, #cc7a00 100%)'
-      : 'linear-gradient(135deg, #ff3b30 0%, #c62828 100%)'};
+        ? 'linear-gradient(135deg, #007aff 0%, #0056b3 100%)'
+        : grade === 'C'
+          ? 'linear-gradient(135deg, #ff9500 0%, #cc7a00 100%)'
+          : 'linear-gradient(135deg, #ff3b30 0%, #c62828 100%)'};
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 `;
 
