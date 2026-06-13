@@ -42,6 +42,7 @@ interface ReceiptData {
 interface ReceiptSectionProps {
   data: ReceiptData;
   showShare?: boolean;
+  showSimulation?: boolean;
 }
 
 const SEVERITY_COLOR: Record<string, string> = {
@@ -50,7 +51,7 @@ const SEVERITY_COLOR: Record<string, string> = {
   "낮음": "#9E9E9E",
 };
 
-const ReceiptSection = ({ data, showShare = true }: ReceiptSectionProps) => {
+const ReceiptSection = ({ data, showShare = true, showSimulation = true }: ReceiptSectionProps) => {
   const router = useRouter();
   const [isSharing, setIsSharing] = useState(false);
   const total = data.analysis_items.reduce((sum, item) => sum + item.likability_score, 0);
@@ -171,19 +172,23 @@ const ReceiptSection = ({ data, showShare = true }: ReceiptSectionProps) => {
         </VerdictBox>
 
         <DashedLine />
+        {showSimulation && (
+          <>
+            <SimulationArea>
+              <SimulationTitle>이 상대와 가상 대화 훈련하기</SimulationTitle>
+              <SimulationDesc>
+                분석된 유해 패턴을 기반으로 AI 상대방과 가상 대화를 나누며,<br />
+                감정적 휘둘림 없이 현명하게 대처하는 훈련을 해보세요.
+              </SimulationDesc>
+              <Button
+                type="primary"
+                text="대응 훈련 시뮬레이션 시작"
+                onClick={() => router.push("/test/simulate")}
+              />
+            </SimulationArea>
+          </>
 
-        <SimulationArea>
-          <SimulationTitle>이 상대와 가상 대화 훈련하기</SimulationTitle>
-          <SimulationDesc>
-            분석된 유해 패턴을 기반으로 AI 상대방과 가상 대화를 나누며,<br />
-            감정적 휘둘림 없이 현명하게 대처하는 훈련을 해보세요.
-          </SimulationDesc>
-          <Button 
-            type="primary" 
-            text="대응 훈련 시뮬레이션 시작" 
-            onClick={() => router.push("/test/simulate")} 
-          />
-        </SimulationArea>
+        )}
 
         {showShare && (
           <>
@@ -194,10 +199,10 @@ const ReceiptSection = ({ data, showShare = true }: ReceiptSectionProps) => {
                 랭킹에 등록하여 다른 사람들과<br />
                 망한 연애 데이터를 공유해보세요.
               </ShareDesc>
-              <Button 
-                type="primary" 
-                text={isSharing ? "등록 중..." : "명예의 전당 등록하기"} 
-                onClick={handleShare} 
+              <Button
+                type="primary"
+                text={isSharing ? "등록 중..." : "명예의 전당 등록하기"}
+                onClick={handleShare}
               />
             </ShareArea>
           </>

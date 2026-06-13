@@ -29,8 +29,8 @@ const RankingPage = () => {
     fetchRanking();
   }, []);
 
-  if(list.length == 0 ){
-    return(
+  if (list.length == 0) {
+    return (
       <PageLayout>
         <ContentArea>
           <HeaderArea>
@@ -56,19 +56,20 @@ const RankingPage = () => {
         </DetailHeader>
 
         <DetailContent>
-        <ReceiptSection 
-          data={{
-            analysis_items: anonymizedItem.analysisItems,
-            compatibility_issues: anonymizedItem.compatibilityIssues,
-            final_verdict: anonymizedItem.finalVerdict,
-            receipt_info: {
-              service_name: "망할연",
-              target_name: "익명의 사용자"
-            },
-            user_type: anonymizedItem.userType
-          }} 
-          showShare={false}
-        />
+          <ReceiptSection
+            data={{
+              analysis_items: anonymizedItem.analysisItems,
+              compatibility_issues: anonymizedItem.compatibilityIssues,
+              final_verdict: anonymizedItem.finalVerdict,
+              receipt_info: {
+                service_name: "망할연",
+                target_name: "익명의 사용자"
+              },
+              user_type: anonymizedItem.userType
+            }}
+            showShare={false}
+            showSimulation={false}
+          />
         </DetailContent>
       </PageLayout>
     );
